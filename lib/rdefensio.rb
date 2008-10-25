@@ -20,8 +20,8 @@ module RDefensio
       DEFAULT_API_VERSION = "1.2".freeze
       DEFAULT_FORMAT = "yaml".freeze
       BASE_URL = "api.defensio.com".freeze
-  
-      attr_accessor :service_type, :api_version, :api_key, :format, :owner_url, :poster
+      
+      attr_accessor :owner_url, :api_key, :service_type, :api_version, :format, :poster
     
       def configure
         raise RDefensioException.new("Configure requires a block") unless block_given?
@@ -55,20 +55,35 @@ module RDefensio
       end
     
       def announce_article(article_hash)
-        article_hash = ParamCleanser.cleanup!(article_hash, REQUIRED_ARTICLE_PARAMS)
+        article_hash = ParamCleanser.cleanup!(article_hash, Constants::REQUIRED_ARTICLE_PARAMS)
+        
         raise RDefensioException.new("The article hash cannot be nil or empty.") if (article_hash.nil? || article_hash.empty?)
-        ParamValidator.required_params_present?(article_hash, REQUIRED_ARTICLE_PARAMS)
-        return post_to_defensio("announce-article", { "owner-url" => owner_url }.merge(article_hash))
+        
+        article_hash = article_hash.merge("owner-url" => owner_url)
+        
+        ParamValidator.required_params_present?(article_hash, Constants::REQUIRED_ARTICLE_PARAMS)
+        
+        return post_to_defensio("announce-article", article_hash)
       end
    
       def audit_comment(comment_hash)
         comment_hash = ParamCleanser.cleanup!(comment_hash, 
-          (REQUIRED_COMMENT_PARAMS + RECOMMENDED_COMMENT_PARAMS).uniq)
-        raise RDefensioException.new("The comment hash cannot be nil or empty.") if (comment_hash.nil? || comment_hash.empty?)
-        raise RDefensioException.new("Invalid comment type: #{comment_hash["comment-type"]}.") unless COMMENT_TYPES.include?(comment_hash["comment-type"])
-        ParamValidator.required_params_present?(comment_hash, REQUIRED_COMMENT_PARAMS)
+          (Constants::REQUIRED_COMMENT_PARAMS + Constants::RECOMMENDED_COMMENT_PARAMS).uniq)
+        
+        raise RDefensioException.new(
+          "The comment hash cannot be nil or empty."
+        ) if (comment_hash.nil? || comment_hash.empty?)
+        
+        raise RDefensioException.new(
+          "Invalid comment type: #{comment_hash["comment-type"]}."
+        ) unless Constants::COMMENT_TYPES.include?(comment_hash["comment-type"])
+        
+        comment_hash = comment_hash.merge("owner-url" => owner_url)
         comment_hash["article-date"] = prepare_date(comment_hash["article-date"])
-        return post_to_defensio("audit-comment", { "owner-url" => owner_url }.merge(comment_hash))
+        
+        ParamValidator.required_params_present?(comment_hash, Constants::REQUIRED_COMMENT_PARAMS)
+        
+        return post_to_defensio("audit-comment", comment_hash)
       end
     
       def report_false_negatives(*signatures)
@@ -92,7 +107,7 @@ module RDefensio
       def post_to_defensio(action, post_data)
         raise RDefensioException.new("An action must be specified.") if (action.nil? || action.empty?)
         raise RDefensioException.new("Post data is required.") if (post_data.nil? || post_data.empty?)
-        raise RDefensioException.new("Invalid action: #{action}.") unless ACTIONS.include?(action)
+        raise RDefensioException.new("Invalid action: #{action}.") unless Constants::ACTIONS.include?(action)
         #encode the data and post to Defensio
         response = poster.post(create_url(action), create_post_data(post_data))
         parser = get_response_parser(response)
