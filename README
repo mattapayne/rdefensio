@@ -1,3 +1,7 @@
-== DefensioR
+RDefensio
+=========
 
-You should document your project here.
+RDefensio is a Ruby library for accessing the Defensio API 
+(http://defensio.com/api/)
+
+This is a work in progress and is not yet complete
