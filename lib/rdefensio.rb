@@ -60,13 +60,6 @@ module RDefensio
         ParamValidator.required_params_present?(article_hash, REQUIRED_ARTICLE_PARAMS)
         return post_to_defensio("announce-article", { "owner-url" => owner_url }.merge(article_hash))
       end
-    
-      def announce_article(article_author, article_author_email, article_title, 
-          article_content, permalink)
-        return announce_article({"article-author" => article_author,
-            "article-author-email" => article_author_email, "artitle-title" => article_title,
-            "article-content" => article_content, "permalink" => permalink})
-      end
    
       def audit_comment(comment_hash)
         comment_hash = ParamCleanser.cleanup!(comment_hash, 
@@ -76,11 +69,6 @@ module RDefensio
         ParamValidator.required_params_present?(comment_hash, REQUIRED_COMMENT_PARAMS)
         comment_hash["article-date"] = prepare_date(comment_hash["article-date"])
         return post_to_defensio("audit-comment", { "owner-url" => owner_url }.merge(comment_hash))
-      end
-    
-      def audit_comment(user_ip, article_date, comment_author, comment_type, optional_params={})
-        return audit_comment({"user-ip" => user_ip, "article-date" => article_date,
-            "comment-author" => comment_author, "comment-type" => comment_type}.merge(optional_params))
       end
     
       def report_false_negatives(*signatures)
