@@ -87,9 +87,7 @@ module RDefensio
       end
     
       def report_false_negatives(*signatures)
-        raise RDefensioException.new("No signatures specified.") if (signatures.nil? || signatures.empty?)
-        return post_to_defensio("report-false-negatives", {"owner-url" => owner_url, 
-            "signatures" => signatures.join(",")})
+        return report_spam_or_ham("report-false-negatives", signatures)
       end
     
       def report_false_positives(*signatures)
