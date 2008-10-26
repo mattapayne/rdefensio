@@ -17,7 +17,7 @@ module RDefensio
     end
     
     def parse
-      return nil
+      raise ParserException.new("This is an abstract method. Please call this on a subclass.")
     end
     
   end

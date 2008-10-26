@@ -9,7 +9,6 @@ module RDefensio
     end
     
     def parse
-      return {} if (data.nil? || data.empty?)
       tmp = YAML.load(data)["defensio-result"]
       return tmp.inject({}) do |h, (k,v)|
         h[k.gsub("-", "_")] = v
