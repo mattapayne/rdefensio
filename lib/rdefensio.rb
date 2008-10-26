@@ -93,9 +93,7 @@ module RDefensio
       end
     
       def report_false_positives(*signatures)
-        raise RDefensioException.new("No signatures specified.") if (signatures.nil? || signatures.empty?)
-        return post_to_defensio("report-false-positives", {"owner-url" => owner_url, 
-            "signatures" => signatures.join(",")})
+        return report_spam_or_ham("report-false-positives", signatures)
       end
     
       def get_stats
@@ -114,6 +112,12 @@ module RDefensio
         response = poster.post(create_url(action), create_post_data(post_data))
         parser = get_response_parser(response)
         return OpenStruct.new(parser.parse)
+      end
+      
+      def report_spam_or_ham(method, signatures)
+        raise RDefensioException.new("No signatures specified.") if (signatures.nil? || signatures.empty?)
+        return post_to_defensio(method, {"owner-url" => owner_url, 
+            "signatures" => signatures.join(",")})
       end
     
       def get_response_parser(response)
