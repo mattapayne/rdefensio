@@ -143,6 +143,7 @@ module RDefensio
         raise RDefensioException.new("Post data must be a hash.") unless hash.is_a?(Hash)
         return hash.inject(String.new) do |str, (key, value)|
           str << "#{CGI.escape(key)}=#{CGI.escape(value)}&" unless ((key.nil? || key.empty?) || (value.nil? || value.empty?))
+          str
         end.chomp("&")
       end
     

@@ -39,6 +39,15 @@ describe RDefensio::API do
   
   describe "API methods" do
     
+    def article_hash(other={})
+      {
+        "article-author" => "Matt Payne",
+        "article-author-email" => "paynmatt@gmail.com",
+        "article-title" => 'title', "article-content" => 'content',
+        "permalink" => "permalink"
+      }.merge(other)
+    end
+    
     before(:each) do
       @yaml_response = stub("YAML Response", :body => yaml_response)
       @xml_response = stub("XML Response", :body => xml_response)
@@ -119,6 +128,14 @@ describe RDefensio::API do
         RDefensio::API.post_to_defensio("get-stats", {"owner-url" => RDefensio::API.owner_url})
       end
       
+      it "should properly prepare the post data" do
+        hash = article_hash({"owner-url" => RDefensio::API.owner_url})
+        @poster.should_receive(:post).
+          with("/blog/1.2/announce-article/dffdfsdfs.yaml", 
+            "permalink=permalink&article-title=title&owner-url=http%3A%2F%2Fapi.test.ca&article-author=Matt+Payne&article-author-email=paynmatt%40gmail.com&article-content=content")
+        RDefensio::API.post_to_defensio("announce-article", hash)
+      end
+      
       it "should url encode the post data" do
         CGI.should_receive(:escape).exactly(2).times
         RDefensio::API.post_to_defensio("get-stats", {"owner-url" => RDefensio::API.owner_url})
@@ -157,15 +174,6 @@ describe RDefensio::API do
     end
     
     describe "announce_article" do
-      
-      def article_hash
-        {
-          "article-author" => "Matt Payne",
-          "article-author-email" => "paynmatt@gmail.com",
-          "article-title" => 'title', "article-content" => 'content',
-          "permalink" => "permalink"
-        }
-      end
       
       it "should call post_to_defensio with the correct arguments" do
         RDefensio::API.should_receive(:post_to_defensio).with("announce-article", 
