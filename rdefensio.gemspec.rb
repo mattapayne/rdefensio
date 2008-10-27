@@ -1,3 +1,4 @@
+#The GemSpec to build the gem
 spec = Gem::Specification.new do |s|
   s.name = 'rdefensio'
   s.version = '1.0'
