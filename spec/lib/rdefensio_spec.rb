@@ -131,7 +131,7 @@ describe RDefensio::API do
         RDefensio::API.post_to_defensio("get-stats", {"owner-url" => RDefensio::API.owner_url})
       end
       
-      it "should parse the response using the YamlParser if the format is set to yaml" do
+      it "should parse the response using the XmlParser if the format is set to yaml" do
         RDefensio::API.configure {|c| c.format = "xml"}
         parser = mock("Xml Parser", :parse => {})
         RDefensio::XmlParser.should_receive(:new).and_return(parser)
