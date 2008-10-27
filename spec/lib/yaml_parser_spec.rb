@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), "..", "spec_helper")
 describe RDefensio::YamlParser do
   
   before(:each) do
-    @parser = RDefensio::YamlParser.new(File.open(File.join(File.dirname(__FILE__), "..", "response.yml"), "r").read)
+    @parser = RDefensio::YamlParser.new(yaml_response)
   end
   
   it "should construct a hash using YAML.load using the data" do
@@ -19,6 +19,11 @@ describe RDefensio::YamlParser do
   
   it "should return a hash" do
     @parser.parse.should be_is_a(Hash)
+  end
+  
+  it "should grap all content below the root node of defensio-response" do
+    result = @parser.parse
+    result.should_not have_key("defensio_response")
   end
   
 end

@@ -12,14 +12,14 @@ module RDefensio
     
   class API
   
+    DEFAULT_SERVICE_TYPE = "blog".freeze
+    DEFAULT_API_VERSION = "1.2".freeze
+    DEFAULT_FORMAT = "yaml".freeze
+    BASE_URL = "api.defensio.com".freeze
+      
     private_class_method(:new)
   
     class << self
-  
-      DEFAULT_SERVICE_TYPE = "blog".freeze
-      DEFAULT_API_VERSION = "1.2".freeze
-      DEFAULT_FORMAT = "yaml".freeze
-      BASE_URL = "api.defensio.com".freeze
       
       attr_accessor :owner_url, :api_key, :service_type, :api_version, :format, :poster
     
@@ -41,7 +41,7 @@ module RDefensio
       end
     
       def poster
-        @poster || Poster.new(BASE_URL)
+        @poster ||= Poster.new(BASE_URL)
       end
     
       def valid?
@@ -59,7 +59,7 @@ module RDefensio
         
         raise RDefensioException.new("The article hash cannot be nil or empty.") if (article_hash.nil? || article_hash.empty?)
         
-        article_hash = article_hash.merge("owner-url" => owner_url)
+        article_hash = article_hash.merge({"owner-url" => owner_url})
         
         ParamValidator.required_params_present?(article_hash, Constants::REQUIRED_ARTICLE_PARAMS)
         
@@ -78,8 +78,8 @@ module RDefensio
           "Invalid comment type: #{comment_hash["comment-type"]}."
         ) unless Constants::COMMENT_TYPES.include?(comment_hash["comment-type"])
         
-        comment_hash = comment_hash.merge("owner-url" => owner_url)
-        comment_hash["article-date"] = prepare_date(comment_hash["article-date"])
+        comment_hash = comment_hash.merge("owner-url" => owner_url, 
+          "article-date" => prepare_date(comment_hash["article-date"]))
         
         ParamValidator.required_params_present?(comment_hash, Constants::REQUIRED_COMMENT_PARAMS)
         
@@ -100,8 +100,6 @@ module RDefensio
     
       # ------------------- End API Methods --------------------------------------
     
-      private
-    
       def post_to_defensio(action, post_data)
         raise RDefensioException.new("An action must be specified.") if (action.nil? || action.empty?)
         raise RDefensioException.new("Post data is required.") if (post_data.nil? || post_data.empty?)
@@ -111,6 +109,8 @@ module RDefensio
         parser = get_response_parser(response)
         return OpenStruct.new(parser.parse)
       end
+      
+      private
       
       def report_spam_or_ham(method, signatures)
         raise RDefensioException.new("No signatures specified.") if (signatures.nil? || signatures.empty?)
@@ -142,7 +142,7 @@ module RDefensio
       def create_post_data(hash)
         raise RDefensioException.new("Post data must be a hash.") unless hash.is_a?(Hash)
         return hash.inject(String.new) do |str, (key, value)|
-          str << "#{CGI.escape(key)}=#{CGI.escape(value)}&"
+          str << "#{CGI.escape(key)}=#{CGI.escape(value)}&" unless ((key.nil? || key.empty?) || (value.nil? || value.empty?))
         end.chomp("&")
       end
     
