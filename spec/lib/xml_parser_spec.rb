@@ -21,7 +21,7 @@ describe RDefensio::XmlParser do
     @parser.parse.should be_is_a(Hash)
   end
   
-  it "should grap all content below the root node of defensio-response" do
+  it "should grab all content below the root node of defensio-response" do
     result = @parser.parse
     result.should_not have_key("defensio_response")
   end
