@@ -22,10 +22,13 @@ Usage
     Configuration is provided via a block. In Rails, this could be done in an
     initializer. Other frameworks vary - in Sinatra, I configure RDefensio in a
     Sinatra configure block.
+    
+    I also typically read the required information from a config file and leave it
+    out of source control.
 
     RDefensio::API.configure do |conf|
       conf.api_key = "Somehow get your api key in here
-      conf.owner_url = "http://your.blog.ca
+      conf.owner_url = "http://your.blog.ca"
       conf.format = "yaml" or "xml" - optional - defaults to yaml - controls the format of the
                     response from Defensio
       conf.service_type = "app" or "blog" - optional - defaults to blog

@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
     'spec/spec_helper.rb', 'spec/response.xml', 'spec/response.yml', 
     'spec/lib/param_cleanser_spec.rb', 'spec/lib/param_validator.rb',
     'spec/lib/parser_spec.rb', 'spec/lib/poster_spec.rb', 'spec/lib/rdefensio_spec.rb',
-    'spec/lib/xml_parser_spec.rb', 'spec/lib/yaml_parser_spec.rv'
+    'spec/lib/xml_parser_spec.rb', 'spec/lib/yaml_parser_spec.rb'
   ]
 end
