@@ -10,7 +10,7 @@ Installation
 RDefensio is provided as a gem, hosted by GitHub
 
 1) gem sources -a http://gems.github.com (you only have to do this once)
-2) sudo gem install rdefensio
+2) sudo gem install mattapayne-rdefensio
 
 Usage
 =====
