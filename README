@@ -17,7 +17,7 @@ Usage
 
     Configuration
     =============
-    1) You need an API from Defensio. Go sign up and get one here: http://defensio.com
+    1) You need an API key from Defensio. Go sign up and get one here: http://defensio.com
 
     Configuration is provided via a block. In Rails, this could be done in an
     initializer. Other frameworks vary - in Sinatra, I configure RDefensio in a
