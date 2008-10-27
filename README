@@ -1,7 +1,68 @@
 RDefensio
 =========
 
-RDefensio is a Ruby library for accessing the Defensio API 
+RDefensio is a framework-agnostic Ruby library for accessing the Defensio API 
 (http://defensio.com/api/)
 
-This is a work in progress and is not yet complete
+Installation
+============
+
+RDefensio is provided as a gem, hosted by GitHub
+
+1) gem sources -a http://gems.github.com (you only have to do this once)
+2) sudo gem install rdefensio
+
+Usage
+=====
+
+    Configuration
+    =============
+    1) You need an API from Defensio. Go sign up and get one here: http://defensio.com
+
+    Configuration is provided via a block. In Rails, this could be done in an
+    initializer. Other frameworks vary - in Sinatra, I configure RDefensio in a
+    Sinatra configure block.
+
+    RDefensio::API.configure do |conf|
+      conf.api_key = "Somehow get your api key in here
+      conf.owner_url = "http://your.blog.ca
+      conf.format = "yaml" or "xml" - optional - defaults to yaml - controls the format of the
+                    response from Defensio
+      conf.service_type = "app" or "blog" - optional - defaults to blog
+      conf.api_version = "the version of the Defensio API" - optional - defaults to 1.2
+      conf.poster = an instance of a class to use to post to the Defensio service - optional
+                    defaults to an instance of RDefensio::Poster, but if you wanted to
+                    you could provide your own implementation. It must implement a
+                    method called post that returns an object the responds to a
+                    method called body.
+    end
+
+    Methods (See http://defensio.com for descriptions)
+    =======
+
+    ** All methods return an instance of an OpenStruct object. The only caveat is
+       that method names are underscored, whereas in the actual response they are
+       dashed (ie: api-version becomes api_version).
+
+    1) RDefensio::API.validate_key()
+    2) RDefensio::API.announce_article(article_hash)
+       The article_hash parameter must contain the following keys/values:
+            KEYS MUST BE STRINGS!!
+            "article-author", "article-author-email",
+            "article-title", "article-content", "permalink"
+    3) RDefensio::API.audit_comment(comment_hash)
+       The comment_hash parameter must contain the following keys/values:
+            KEYS MUST BE STRINGS!!
+            "user-ip", "article-date", "comment-author", "comment-type"
+       Optionally, but recommended, the following keys/values can be passed:
+            KEYS MUST BE STRINGS!!
+            "comment-comment", "comment-author-email", "comment-author-url", 
+            "permalink", "referrer", "user-logged-in", "trusted-user", "openid", 
+            "test-force"
+    4) RDefensio::API.report_false_negatives(*signatures)
+    5) RDefensio::API.report_false_positives(*signatures)
+    6) RDefensio::API.get_stats()
+
+That's it. Hopefully someone will find this useful.
+
+Copyright (c) 2008 Matt Payne, released under the MIT license
