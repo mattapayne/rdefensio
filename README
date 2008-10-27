@@ -27,7 +27,7 @@ Usage
     out of source control.
 
     RDefensio::API.configure do |conf|
-      conf.api_key = "Somehow get your api key in here
+      conf.api_key = "your API key"
       conf.owner_url = "http://your.blog.ca"
       conf.format = "yaml" or "xml" - optional - defaults to yaml - controls the format of the
                     response from Defensio
