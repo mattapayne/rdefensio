@@ -1,8 +1,8 @@
 #The GemSpec to build the gem
 Gem::Specification.new do |s|
   s.name = 'rdefensio'
-  s.version = '1.0'
-  s.date = "2008-10-27"
+  s.version = '1.0.1'
+  s.date = "2009-03-14"
   s.summary = "Defensio library."
   s.description = %{A Ruby Defensio library use to access the Defensio API.}
   s.has_rdoc = false
